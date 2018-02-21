@@ -3,42 +3,64 @@
 <head>
     <title>three.js webgl - morph targets - horse</title>
     <meta charset="utf-8">
+    <style>
+        body{
+            margin:0;
+            overflow: hidden;
+        }
 
+        p {
+            color: #ffffff;
+            font-size:13px;
+            padding: 5px;
+            position: absolute;
+            text-align:center;
+            top: 0;
+            width: 100%;
+        }
+
+        .button-container{
+            position: absolute;
+        }
+
+        .button{
+            background-color: white;
+            color: magenta;
+            cursor: pointer;
+            margin-top:10px;
+            padding:20px;
+        }
+
+    </style>
 </head>
 <body>
-<div class="c-button js-age-button" id="age01">Under 1</div>
-<div class="c-button js-age-button" id="age02">1-4</div>
-<div class="c-button js-age-button" id="age03">5-9</div>
-<div class="c-button js-age-button" id="age04">10-15</div>
-<div class="c-button js-age-button" id="age05">16+</div>
-<div id="container"></div>
-<div id="info">
-    <a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> - WebGL morph target example
+<p> Click on the buttons to see the morph.</p>
+
+<div class="button-container">
+    <div class="button" id="btn01">shape 1</div>
+    <div class="button" id="btn02">shape 2</div>
+    <div class="button" id="btn03">reset</div>
 </div>
 
+<div id="container"></div>
+
 <script src="../../assets/js/three.min.js"></script>
-<script src="../../assets/js/stats.min.js"></script>
 <script src="../../assets/js/controls/OrbitControls.js"></script>
 <script src="../../assets/js/loaders/GLTFLoader.js"></script>
 
 <script>
 
-    var container, stats;
+    var container;
 
     var camera, scene, renderer;
-
-    var geometry, objects;
 
     var mesh;
 
     var sign = 1;
 
-    var click = false;
-
-    var age01 = document.getElementById('age01');
-    var age02 = document.getElementById('age02');
-    var age03 = document.getElementById('age03');
-    var age04 = document.getElementById('age04');
+    var shape01 = document.getElementById('btn01');
+    var shape02 = document.getElementById('btn02');
+    var reset = document.getElementById('btn03');
 
     init();
     animate();
@@ -76,14 +98,12 @@
 
             mesh.material.morphTargets = true;
             mesh.scale.set(1,1,1);
-            mesh.rotation.z = Math.PI / 2;
 
             scene.add( mesh );
 
         });
 
         //
-        console.log(mesh, 'mesh');
 
         renderer = new THREE.WebGLRenderer();
         renderer.setPixelRatio( window.devicePixelRatio );
@@ -97,11 +117,6 @@
         //
 
         window.addEventListener( 'resize', onWindowResize, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-        document.addEventListener( 'mouseup', onDocumentMouseUp, true );
-        //document.getElementsByClassName("js-button")[0].addEventListener( 'click', onButtonClick, false );
-
-        console.log(scene);
 
     }
 
@@ -121,132 +136,45 @@
 
     }
 
-    function onDocumentMouseDown( event ) {
-
-        event.preventDefault();
-        click = true;
-        // console.log(click);
-
-    }
-    function onDocumentMouseUp( event ) {
-
-        event.preventDefault();
-        click = false;
-        // console.log(click);
-
-    }
-
-    function onButtonClick ( event ) {
-        console.log('unicorn');
-
-    }
-
     function render() {
-        //console.log(click, 'click');
 
-        if(click){
+        shape01.onclick = function () {
 
-//            if ( mesh !== undefined ) {
-//
-//                // mesh.rotation.y += 0.01;
-//              //  console.log( mesh.morphTargetInfluences,'morph');
-//
-//                mesh.morphTargetInfluences[ 3 ] = mesh.morphTargetInfluences[ 3 ] + 0.01 * sign;
-//
-//                if ( mesh.morphTargetInfluences[ 3 ] <= 0 || mesh.morphTargetInfluences[ 3 ] >= 1 ) {
-//
-//                    sign *= -1;
-//
-//                }
-//
-//            }
-
-        }
-        age01.onclick = function () {
-            console.log('button1');
             if ( mesh !== undefined ) {
-                console.log(mesh.morphTargetInfluences,'influences');
 
-                mesh.morphTargetInfluences = [0,0,0,0];
-                // mesh.rotation.y += 0.01;
-                //  console.log( mesh.morphTargetInfluences,'morph');
-                while(mesh.morphTargetInfluences[0]!== 1){
-
-                    mesh.morphTargetInfluences[ 0 ] = mesh.morphTargetInfluences[ 0 ] + 0.5*sign;
-
-                }
-
-
-//            if ( mesh.morphTargetInfluences[ 2 ] <= 0 || mesh.morphTargetInfluences[ 2 ] >= 1 ) {
-//
-//                sign *= -1;
-//
-//            }
+                //something is missing or is wrong here
+                mesh.morphTargetInfluences = [0,0];
+                mesh.morphTargetInfluences[ 0 ] = mesh.morphTargetInfluences[ 0 ] + sign;
 
             }
-        }
+
+        };
+
+        shape02.onclick = function () {
+
+            if ( mesh !== undefined ) {
+
+                //something is missing or is wrong here
+                mesh.morphTargetInfluences = [0,0];
+                mesh.morphTargetInfluences[ 1 ] = mesh.morphTargetInfluences[ 1 ] + sign;
+
+            }
+
+        };
+
+        reset.onclick = function () {
+
+            if ( mesh !== undefined ) {
+
+                mesh.morphTargetInfluences = [0,0];
+
+            }
+
+        };
 
         renderer.render( scene, camera );
 
     }
-
-
-
-    age02.onclick = function () {
-        console.log('button1');
-        if ( mesh !== undefined ) {
-            console.log(mesh.morphTargetInfluences);
-
-            // mesh.rotation.y += 0.01;
-            //  console.log( mesh.morphTargetInfluences,'morph')
-            mesh.morphTargetInfluences = [0,0,0,0];
-            mesh.morphTargetInfluences[ 1 ] = mesh.morphTargetInfluences[ 1 ] + sign;
-
-//            if ( mesh.morphTargetInfluences[ 3 ] <= 0 || mesh.morphTargetInfluences[ 3 ] >= 1 ) {
-//
-//                sign *= -1;
-//
-//            }
-
-        }
-    }
-    age03.onclick = function () {
-        console.log('button1');
-        if ( mesh !== undefined ) {
-            console.log(mesh.morphTargetInfluences);
-
-            // mesh.rotation.y += 0.01;
-            //  console.log( mesh.morphTargetInfluences,'morph')
-            mesh.morphTargetInfluences = [0,0,0,0];
-            mesh.morphTargetInfluences[ 2 ] = mesh.morphTargetInfluences[ 2 ] + sign;
-
-//            if ( mesh.morphTargetInfluences[ 3 ] <= 0 || mesh.morphTargetInfluences[ 3 ] >= 1 ) {
-//
-//                sign *= -1;
-//
-//            }
-
-        }
-    }
-    age04.onclick = function () {
-        console.log('button1');
-        if ( mesh !== undefined ) {
-            console.log(mesh.morphTargetInfluences);
-
-            // mesh.rotation.y += 0.01;
-            //  console.log( mesh.morphTargetInfluences,'morph')
-            mesh.morphTargetInfluences = [0,0,0,0];
-            mesh.morphTargetInfluences[ 3 ] = mesh.morphTargetInfluences[ 3 ] + 0.1 * sign;
-
-//            if ( mesh.morphTargetInfluences[ 3 ] <= 0 || mesh.morphTargetInfluences[ 3 ] >= 1 ) {
-//
-//                sign *= -1;
-//
-//            }
-
-        }
-    }
-
 
 
 </script>
